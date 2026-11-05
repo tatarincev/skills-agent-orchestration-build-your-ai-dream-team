@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7fb">
+    <title>Project Pulse</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="dashboard">
+      <header class="dashboard-header">
+        <div>
+          <p class="eyebrow">MONA'S TEAM · PROJECT OVERVIEW</p>
+          <h1>Project Pulse</h1>
+          <p class="intro">A clear view of what’s moving, who’s leading, and where the team can help.</p>
+        </div>
+        <div class="update-note" aria-label="Dashboard overview">
+          <span class="pulse-dot" aria-hidden="true"></span>
+          Team overview
+        </div>
+      </header>
+
+      <section class="project-section" aria-labelledby="projects-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">YOUR WORK, AT A GLANCE</p>
+            <h2 id="projects-heading">Team projects</h2>
+          </div>
+          <p class="project-count" id="project-count" aria-live="polite"></p>
+        </div>
+        <p class="load-error" id="load-error" role="alert" hidden></p>
+        <ul class="project-grid" id="project-list" aria-label="Project cards"></ul>
+      </section>
+
+      <footer class="dashboard-footer">
+        <span class="footer-mark" aria-hidden="true">P</span>
+        <p>Good work moves forward when everyone can see it.</p>
+      </footer>
+    </main>
+
+    <script>
+      const projectList = document.querySelector("#project-list");
+      const projectCount = document.querySelector("#project-count");
+      const loadError = document.querySelector("#load-error");
+
+      function createDetail(label, value, className) {
+        const detail = document.createElement("div");
+        detail.className = "project-detail";
+
+        const detailLabel = document.createElement("dt");
+        detailLabel.textContent = label;
+
+        const detailValue = document.createElement("dd");
+        detailValue.className = className;
+        detailValue.textContent = value;
+
+        detail.append(detailLabel, detailValue);
+        return detail;
+      }
+
+      function renderProject(project, index) {
+        const card = document.createElement("li");
+        card.className = "project-card";
+        card.style.setProperty("--card-index", index);
+
+        const topLine = document.createElement("div");
+        topLine.className = "card-topline";
+
+        const status = document.createElement("span");
+        status.className = `status-badge status-${project.status.toLowerCase().replaceAll(" ", "-")}`;
+        status.textContent = project.status;
+        topLine.append(status);
+
+        const priority = document.createElement("span");
+        priority.className = `priority-badge priority-${project.priority.toLowerCase()}`;
+        priority.textContent = `${project.priority} priority`;
+        topLine.append(priority);
+
+        const heading = document.createElement("h3");
+        heading.className = "project-name";
+        heading.textContent = project.name;
+
+        const summary = document.createElement("p");
+        summary.className = "project-summary";
+        summary.textContent = project.summary;
+
+        const details = document.createElement("dl");
+        details.className = "project-details";
+        details.append(
+          createDetail("Project lead", project.owner, "detail-value"),
+          createDetail("Recent activity", project.recentActivity, "detail-value activity-value")
+        );
+
+        card.append(topLine, heading, summary, details);
+        return card;
+      }
+
+      async function loadProjects() {
+        try {
+          const response = await fetch("project-data.json");
+          if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}.`);
+          }
+
+          const data = await response.json();
+          if (!Array.isArray(data.projects)) {
+            throw new Error('Expected a "projects" array in project-data.json.');
+          }
+
+          projectList.replaceChildren(...data.projects.map(renderProject));
+          projectCount.textContent = `${data.projects.length} ${data.projects.length === 1 ? "project" : "projects"}`;
+        } catch (error) {
+          loadError.hidden = false;
+          loadError.textContent = `Project data could not be displayed: ${error.message}`;
+        }
+      }
+
+      loadProjects();
+    </script>
+  </body>
+</html>

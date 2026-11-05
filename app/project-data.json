@@ -1,0 +1,36 @@
+{
+  "projects": [
+    {
+      "name": "Contributor Onboarding",
+      "owner": "Alex Morgan",
+      "status": "In progress",
+      "recentActivity": "Welcome flow review completed today",
+      "priority": "High",
+      "summary": "Make the first contribution feel clear, friendly, and easy to complete."
+    },
+    {
+      "name": "Community Resource Hub",
+      "owner": "Sam Rivera",
+      "status": "On track",
+      "recentActivity": "Resource list updated yesterday",
+      "priority": "Medium",
+      "summary": "Bring team guides and helpful links together in one shared space."
+    },
+    {
+      "name": "Release Readiness",
+      "owner": "Jordan Lee",
+      "status": "At risk",
+      "recentActivity": "Two review items need an owner",
+      "priority": "High",
+      "summary": "Help contributors spot release blockers early and coordinate next steps."
+    },
+    {
+      "name": "Accessibility Improvements",
+      "owner": "Taylor Kim",
+      "status": "Planning",
+      "recentActivity": "Feedback gathered from four contributors",
+      "priority": "Low",
+      "summary": "Turn community feedback into a focused set of inclusive design updates."
+    }
+  ]
+}
